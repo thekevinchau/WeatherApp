@@ -9,30 +9,36 @@ export function WeatherData(){
     const [wind, setWind] = useState<number>(0);
     const [windDir, setWindDir] = useState<string>("");
 
-    function retrieveURL(country: string){
-        return `https://api.weatherapi.com/v1/current.json?key=2aba150aac6549a981514758242902&q=${country}`
+    function retrieveURL(location: string){
+        return `https://api.weatherapi.com/v1/current.json?key=2aba150aac6549a981514758242902&q=${location}`
     }
 
 
     useEffect(() => {
         const fetchData = async () => {
-            const url = retrieveURL("pakistan")
-          const fetchData = await fetch(url);
-          const response = await fetchData.json();
-          console.log(response);
-          setImage(response.current.condition.icon);
-          setTemp(response.current.temp_f)
-          setCountry(response.location.country);
-          setCity(response.location.name);
-          setHumidity(response.current.humidity);
-          setWind(response.current.wind_mph);
-          setWindDir(response.current.wind_dir)
+            try {
+                const url = retrieveURL("detroit")
+                const fetchData = await fetch(url);
+                const response = await fetchData.json();
+                console.log(response);
+                setImage(response.current.condition.icon);
+                setTemp(response.current.temp_f)
+                setCountry(response.location.country);
+                setCity(response.location.name);
+                setHumidity(response.current.humidity);
+                setWind(response.current.wind_mph);
+                setWindDir(response.current.wind_dir)
+            }
+            catch{
+                console.log("Error receiving data!");
+            }
+        
         };
         fetchData();
        }, [])
       
     return (
-        <div>
+        <div className="flex flex-col items-center">
             <img src={image}></img>
             <p>{`Current Temperature: ${temp}`}</p>
             <p>{`Humidity: ${humidity}`}</p>
