@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SearchBar } from "./SearchBar";
 
 export function WeatherData(){
     const [country, setCountry] = useState<string>("");
@@ -10,6 +11,8 @@ export function WeatherData(){
     const [windDir, setWindDir] = useState<string>("");
     const [region, setRegion] = useState<string>("");
 
+    const [searchResult, setSearchResult] = useState<string>("");
+
     function retrieveURL(location: string){
         return `https://api.weatherapi.com/v1/current.json?key=2aba150aac6549a981514758242902&q=${location}`
     }
@@ -18,7 +21,7 @@ export function WeatherData(){
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const url = retrieveURL("mumbai")
+                const url = retrieveURL(searchResult)
                 const fetchData = await fetch(url);
                 const response = await fetchData.json();
                 console.log(response);
@@ -41,6 +44,8 @@ export function WeatherData(){
       
     return (
         <div className="flex flex-col items-center  border border-sky-500 w-6/12 h-3/6">
+            <SearchBar setSearchResult={setSearchResult}></SearchBar>
+            <p>{searchResult}</p>
             <img src={image}></img>
             <p>{`Current Temperature: ${Math.round(temp)}°F`}</p>
             <p>{`Humidity: ${humidity}%`}</p>

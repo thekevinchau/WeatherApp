@@ -1,18 +1,20 @@
-import React, { useState } from "react"
+import React from "react"
 
-export function SearchBar(){
-    const [input ,setInput] = useState<string>("");
+interface SearchProps {
+    setSearchResult: (searchResult: string) => void
+}
+
+export function SearchBar({setSearchResult}: SearchProps){
 
     function setLocation(event: React.ChangeEvent<HTMLInputElement>){
-        setInput(event.target.value);
+        setSearchResult(event.target.value);
     }
 
 
 
     return <div>
-        <input type="text" placeholder="Country" onChange={setLocation} value={input}>
+        <input type="text" placeholder="Country" onChange={(setLocation)}>
         </input>
         <button>Submit</button>
-        <p>{input}</p>
     </div>
 }
