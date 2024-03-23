@@ -1,20 +1,18 @@
-import React from "react"
+import React, { useState } from "react"
 
-interface SearchProps {
-    setSearchResult: (searchResult: string) => void
-}
-
-export function SearchBar({setSearchResult}: SearchProps){
+export function SearchBar(){
+    const [input ,setInput] = useState<string>("");
 
     function setLocation(event: React.ChangeEvent<HTMLInputElement>){
-        setSearchResult(event.target.value);
+        setInput(event.target.value);
     }
 
 
 
     return <div>
-        <input type="text" placeholder="Country" onChange={(setLocation)}>
+        <input type="text" placeholder="Country" onChange={setLocation} value={input}>
         </input>
         <button>Submit</button>
+        <p>{input}</p>
     </div>
 }
