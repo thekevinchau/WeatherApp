@@ -24,13 +24,19 @@ export function WeatherData(){
     //function to split and parse the time into clock time and date
     async function splitRetrievedTime(timeData: string){
         const splitTimeData = await timeData.split(" ");
+        console.log(splitTimeData);
 
         //Inner asynchronous function to split the date and reconstructs it based on MM/DD/YYYY format
         async function splitDate(date: string){            
             const dateObject = new Date(date);
-            const month = dateObject.toLocaleString('default', {month: 'long'});
 
-            console.log(month);
+            //Extracting prominent data from dateObject
+            const month = dateObject.toLocaleString('default', {month: 'long'});
+            const dayString = dateObject.toLocaleDateString('default', { weekday: 'long'} );
+            const dayNumber = dateObject.getDate();
+            const year = dateObject.getFullYear();
+
+           setDate(`${dayString} ${month} ${dayNumber}, ${year}`);
         }
         splitDate(splitTimeData[0]);
     }
@@ -41,6 +47,7 @@ export function WeatherData(){
         return `https://api.weatherapi.com/v1/current.json?key=2aba150aac6549a981514758242902&q=${location}`
     }
 
+    //Asynchronous function to fetch the data from the Weather API.
     async function fetchData() {
         try{
             const url = retrieveQuery(location);
