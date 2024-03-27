@@ -16,36 +16,33 @@ export function WeatherData(){
     const [wind, setWind] = useState<number>(0);
     const [windDir, setWindDir] = useState<string>("");
 
-    //Time related states
     const [retrievedTime, setRetrievedTime] = useState<string>("");
     const [date, setDate] = useState<string>("");
 
-
-    //function to split and parse the time into clock time and date
-    async function splitRetrievedTime(timeData: string){
-        const splitTimeData = await timeData.split(" ");
-        console.log(splitTimeData);
-
-        //Inner asynchronous function to split the date and reconstructs it based on MM/DD/YYYY format
-        async function splitDate(date: string){            
+    async function processRetrievedDate(timeData: string){
+        const splitTime = await timeData.split(" ");
+        console.log(splitTime);
+        
+        function parseDate(date: string){
             const dateObject = new Date(date);
-
-            //Extracting prominent data from dateObject
+            const dayString = dateObject.toLocaleDateString('default', {weekday: 'long'})
             const month = dateObject.toLocaleString('default', {month: 'long'});
-            const dayString = dateObject.toLocaleDateString('default', { weekday: 'long'} );
-            const dayNumber = dateObject.getDate();
+            const dayNumber = dateObject.getDate() + 1;
             const year = dateObject.getFullYear();
-
-           setDate(`${dayString} ${month} ${dayNumber}, ${year}`);
+            
+            const reconstructedString = `${dayString} ${month} ${dayNumber}, ${year}`
+            return reconstructedString;
         }
-        splitDate(splitTimeData[0]);
+        const parsedDate = parseDate(splitTime[0]);
+        setDate(parsedDate);
     }
-    splitRetrievedTime(retrievedTime);
+
 
     //Queries the API for the particular location entered into the searchbar
     function retrieveQuery(location: string){
         return `https://api.weatherapi.com/v1/current.json?key=2aba150aac6549a981514758242902&q=${location}`
     }
+
 
     //Asynchronous function to fetch the data from the Weather API.
     async function fetchData() {
@@ -62,7 +59,11 @@ export function WeatherData(){
             setWind(response.current.wind_mph);
             setWindDir(response.current.wind_dir)
             setRegion(response.location.region)
-            setRetrievedTime(response.location.localtime)
+
+            const retrievedTime = response.location.localtime;
+
+            setRetrievedTime(retrievedTime)
+            await processRetrievedDate(retrievedTime);
         }
         catch{
             console.log("Error receiving data!");
