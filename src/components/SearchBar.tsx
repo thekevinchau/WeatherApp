@@ -12,7 +12,7 @@ export function SearchBar({setLocation}: searchBarProps){
 
 
     return <div>
-        <input type="text" placeholder="Country" onChange={handleInput}>
+        <input type="text" placeholder="Enter your location" onChange={handleInput} required>
         </input>
     </div>
 }
